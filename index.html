@@ -124,12 +124,12 @@
         
         .video-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 10px 20px rgba(255, 0, 102, 0.2);
+            box-shadow: 0 10px 20px rgba(255, 0, 102, 0.25);
         }
         
         .thumbnail {
             position: relative;
-            padding-top: 56.25%; /* 16:9 aspect ratio */
+            padding-top: 56.25%; /* 16:9 ratio */
             background: #000;
             overflow: hidden;
         }
@@ -148,7 +148,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(255, 0, 102, 0.85);
+            background: rgba(255, 0, 102, 0.9);
             width: 52px;
             height: 52px;
             border-radius: 50%;
@@ -165,10 +165,8 @@
             transform: translate(-50%, -50%) scale(1.1);
         }
         
-        .duration {
+        .duration, .hd-badge {
             position: absolute;
-            bottom: 8px;
-            right: 8px;
             background: rgba(0,0,0,0.8);
             color: #fff;
             font-size: 12px;
@@ -176,17 +174,8 @@
             border-radius: 3px;
         }
         
-        .hd-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #00cc00;
-            color: #fff;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
+        .duration { bottom: 8px; right: 8px; }
+        .hd-badge { top: 8px; left: 8px; background: #00cc00; font-weight: bold; }
         
         .video-info {
             padding: 12px 14px;
@@ -237,24 +226,12 @@
             margin-top: 40px;
         }
         
-        /* Mobile optimizations */
+        /* Mobile */
         @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            nav ul {
-                justify-content: center;
-            }
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                max-width: 100%;
-            }
-            .page-title {
-                font-size: 22px;
-            }
+            .header-container { flex-direction: column; align-items: stretch; }
+            nav ul { justify-content: center; }
+            .grid { grid-template-columns: 1fr; }
+            .sidebar { max-width: 100%; }
         }
     </style>
 </head>
@@ -284,7 +261,6 @@
             <h1 class="page-title">🔥 New Videos</h1>
             
             <div class="grid">
-                <!-- Your Video -->
                 <div class="video-card" data-url="https://files.catbox.moe/1f7deq.mp4">
                     <div class="thumbnail">
                         <img src="https://picsum.photos/id/1015/400/225" alt="Video thumbnail">
@@ -294,27 +270,31 @@
                     </div>
                     <div class="video-info">
                         <div class="video-title">Your Video - vid_360p.mp4</div>
-                        <div class="video-meta">Just uploaded • 372 seconds</div>
+                        <div class="video-meta">Just uploaded • 6:13</div>
                     </div>
                 </div>
             </div>
+            
+            <p style="margin-top: 25px; color: #aaa; font-size: 14.5px; max-width: 600px;">
+                ✅ Click the thumbnail to open the video in a new tab.<br>
+                The video uses a direct MP4 link for best compatibility across Chrome, Firefox, Safari, Edge, and mobile browsers.
+            </p>
         </div>
         
-        <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-section">
-                <h3 class="sidebar-title">Video Info</h3>
-                <p style="font-size: 14px; color: #ccc;">
-                    Direct link: Catbox.moe<br>
-                    Duration: 6:13<br><br>
-                    Tap the card to open and play the video in a new tab.
+                <h3 class="sidebar-title">Playback Tips</h3>
+                <p style="font-size: 14px; color: #ccc; line-height: 1.6;">
+                    • Works on all modern browsers<br>
+                    • If autoplay is blocked (common on mobile/Safari), just tap the play button<br>
+                    • Video hosted on Catbox.moe (direct MP4)
                 </p>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Noodlemagazine • Compact Demo</p>
+        <p>&copy; 2026 Noodlemagazine • Optimized for all browsers</p>
     </footer>
 
     <script>
@@ -325,7 +305,7 @@
             });
         });
         
-        console.log("%c✅ Compact & mobile-friendly Noodlemagazine page ready!", "color: #ff0066; font-weight: bold;");
+        console.log("%c✅ Compact Noodlemagazine page - Cross-browser ready!", "color: #ff0066; font-weight: bold;");
     </script>
 </body>
 </html>
