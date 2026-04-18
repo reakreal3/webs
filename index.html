@@ -8,242 +8,295 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; }
+    
     .video-card {
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .video-card:hover {
-      transform: scale(1.05);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
     }
     .thumbnail-container {
       position: relative;
       overflow: hidden;
+      border-radius: 12px;
+    }
+    .thumbnail-container img {
+      transition: transform 0.4s ease;
+    }
+    .video-card:hover .thumbnail-container img {
+      transform: scale(1.08);
     }
     .duration {
       position: absolute;
-      bottom: 8px;
-      right: 8px;
-      background: rgba(0,0,0,0.85);
-      padding: 2px 6px;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.9);
+      padding: 3px 8px;
       font-size: 12px;
-      border-radius: 3px;
+      font-weight: 600;
+      border-radius: 4px;
     }
     .verified {
       position: absolute;
-      top: 8px;
-      left: 8px;
-      background: #f00;
+      top: 10px;
+      left: 10px;
+      background: #ff0000;
       color: white;
       font-size: 10px;
-      padding: 1px 5px;
-      border-radius: 2px;
-      font-weight: bold;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+    .modal-content {
+      animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.85) translateY(40px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .active-nav {
+      color: #ef4444;
+      border-bottom: 2px solid #ef4444;
+      padding-bottom: 2px;
     }
   </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen">
 
   <!-- HEADER -->
-  <header class="bg-black border-b border-red-900 sticky top-0 z-50">
-    <div class="max-w-screen-2xl mx-auto px-4 py-3 flex items-center gap-6">
-      <!-- Logo -->
-      <div class="flex items-center gap-1">
-        <span class="text-4xl font-black text-red-600 tracking-tighter">PH</span>
-        <span class="text-white text-2xl font-bold">PORNHUB</span>
+  <header class="bg-black border-b border-red-900/50 sticky top-0 z-50">
+    <div class="max-w-screen-2xl mx-auto px-4 py-4 flex items-center gap-8">
+      <div class="flex items-center gap-1.5 flex-shrink-0">
+        <span class="text-5xl font-black text-red-600 tracking-[-4px]">PH</span>
+        <span class="text-3xl font-bold tracking-tight">PORNHUB</span>
       </div>
 
-      <!-- Search -->
-      <div class="flex-1 max-w-2xl">
+      <div class="flex-1 max-w-3xl">
         <div class="relative">
-          <input 
-            type="text" 
-            placeholder="Search Pornhub..." 
-            class="w-full bg-zinc-900 border border-zinc-700 focus:border-red-600 rounded-full py-3 pl-12 pr-6 text-sm outline-none">
-          <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+          <input id="searchInput" type="text" placeholder="Search Pornhub..." 
+                 class="w-full bg-zinc-900 border border-zinc-700 focus:border-red-600 rounded-full py-3.5 pl-14 pr-6 text-base outline-none">
+          <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-zinc-400"></i>
         </div>
       </div>
 
-      <!-- Right side -->
-      <div class="flex items-center gap-6 text-sm">
-        <a href="#" class="hover:text-red-500 transition-colors flex items-center gap-1">
-          <i class="fa-solid fa-video"></i> <span class="hidden md:inline">Upload</span>
-        </a>
-        <a href="#" class="hover:text-red-500 transition-colors">Categories</a>
-        <a href="#" class="hover:text-red-500 transition-colors">Live</a>
+      <div class="flex items-center gap-8 text-sm font-medium">
+        <a href="#" class="flex items-center gap-2 hover:text-red-500"><i class="fa-solid fa-upload"></i> <span class="hidden md:inline">Upload</span></a>
+        <a href="#" class="hover:text-red-500">Categories</a>
+        <a href="#" class="hover:text-red-500">Live Cams</a>
         
-        <div class="flex items-center gap-4">
-          <button class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-full text-sm font-medium">Sign Up</button>
-          <div class="w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center text-xs font-bold">G</div>
+        <div class="flex items-center gap-4 pl-6 border-l border-zinc-800">
+          <button class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 px-7 py-2.5 rounded-full font-semibold">Get Premium</button>
+          <div class="w-9 h-9 bg-zinc-700 rounded-full flex items-center justify-center font-bold">G</div>
         </div>
       </div>
     </div>
 
     <!-- Secondary Nav -->
-    <div class="bg-zinc-900 border-t border-zinc-800 text-xs">
-      <div class="max-w-screen-2xl mx-auto px-4 py-2 flex gap-6 overflow-x-auto">
-        <a href="#" class="hover:text-red-500 whitespace-nowrap">Home</a>
-        <a href="#" class="hover:text-red-500 whitespace-nowrap">Trending</a>
-        <a href="#" class="hover:text-red-500 whitespace-nowrap">Most Viewed</a>
-        <a href="#" class="hover:text-red-500 whitespace-nowrap">New Videos</a>
-        <a href="#" class="hover:text-red-500 whitespace-nowrap">VR Porn</a>
-        <a href="#" class="hover:text-red-500 whitespace-nowrap">Live Cams</a>
-        <a href="#" class="hover:text-red-500 whitespace-nowrap">Pornstars</a>
+    <div class="bg-zinc-900 border-t border-zinc-800">
+      <div id="secondaryNav" class="max-w-screen-2xl mx-auto px-6 py-3 flex gap-8 text-sm overflow-x-auto whitespace-nowrap">
+        <a href="#" data-filter="all" class="active-nav cursor-pointer">Home</a>
+        <a href="#" data-filter="trending" class="hover:text-red-500 cursor-pointer">Trending</a>
+        <a href="#" data-filter="mostviewed" class="hover:text-red-500 cursor-pointer">Most Viewed</a>
+        <a href="#" data-filter="new" class="hover:text-red-500 cursor-pointer">New Videos</a>
+        <a href="#" data-filter="vr" class="hover:text-red-500 cursor-pointer">VR Porn</a>
+        <a href="#" data-filter="live" class="hover:text-red-500 cursor-pointer">Live</a>
       </div>
     </div>
   </header>
 
-  <!-- HERO / PREMIUM BANNER -->
-  <div class="bg-gradient-to-r from-red-900 to-black py-6">
+  <!-- PREMIUM BANNER -->
+  <div class="bg-gradient-to-r from-red-950 to-black py-5 border-b border-red-900/50">
     <div class="max-w-screen-2xl mx-auto px-6 text-center">
-      <p class="text-red-400 text-sm font-medium">Join Pornhub Premium for ad-free experience + exclusive content</p>
-      <button class="mt-3 bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-zinc-200">Get Premium – 50% OFF</button>
+      <button onclick="alert('Premium demo – 50% off!')" 
+              class="bg-white text-black hover:bg-amber-300 px-10 py-3 rounded-full font-bold">
+        GET PREMIUM — 50% OFF FIRST MONTH
+      </button>
     </div>
   </div>
 
   <!-- TRENDING SECTION -->
   <section class="max-w-screen-2xl mx-auto px-6 py-10">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold flex items-center gap-3">
-        <span class="text-red-600">🔥</span> Trending Right Now
-      </h2>
-      <a href="#" class="text-red-500 hover:underline text-sm flex items-center gap-2">See All <i class="fa-solid fa-arrow-right"></i></a>
+    <div class="flex items-end justify-between mb-8">
+      <h2 id="sectionTitle" class="text-3xl font-bold">Trending Right Now 🔥</h2>
+      <a onclick="showMore()" class="text-red-500 hover:underline cursor-pointer flex items-center gap-2 text-sm">
+        See All <i class="fa-solid fa-arrow-right"></i>
+      </a>
     </div>
+    <div id="video-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-6"></div>
+  </section>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4" id="video-grid"></div>
+  <!-- RECOMMENDED SECTION -->
+  <section class="max-w-screen-2xl mx-auto px-6 py-10 border-t border-zinc-900">
+    <h2 class="text-3xl font-bold mb-8">Recommended For You</h2>
+    <div id="recommended-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"></div>
   </section>
 
   <!-- VIDEO MODAL -->
   <div id="videoModal" class="hidden fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4">
-    <div class="bg-zinc-900 rounded-2xl overflow-hidden w-full max-w-4xl">
-      <div class="flex justify-between items-center px-6 py-4 border-b border-zinc-700">
-        <h3 id="modalTitle" class="font-semibold">Now Playing</h3>
-        <button onclick="closeModal()" class="text-3xl text-zinc-400 hover:text-white">×</button>
+    <div class="modal-content bg-zinc-900 rounded-3xl overflow-hidden w-full max-w-5xl">
+      <div class="flex justify-between items-center px-8 py-5 border-b border-zinc-800">
+        <h3 id="modalTitle" class="font-semibold text-xl"></h3>
+        <button onclick="closeModal()" class="text-4xl text-zinc-400 hover:text-white">×</button>
       </div>
       <div class="relative bg-black">
         <video id="player" controls autoplay class="w-full aspect-video" playsinline></video>
-        <div id="loading" class="absolute inset-0 flex items-center justify-center bg-black/70 hidden">
+        <div id="loading" class="absolute inset-0 flex items-center justify-center bg-black/80 hidden">
           <div class="text-center">
-            <i class="fa-solid fa-spinner fa-spin text-4xl text-red-600 mb-4"></i>
-            <p>Loading video...</p>
+            <i class="fa-solid fa-spinner fa-spin text-5xl text-red-600 mb-4"></i>
+            <p class="text-zinc-400">Loading video...</p>
           </div>
         </div>
       </div>
-      <div class="p-6 text-sm text-zinc-400" id="modalDesc"></div>
+      <div class="p-8 text-zinc-300" id="modalDesc"></div>
     </div>
   </div>
 
   <footer class="bg-black py-12 text-center text-zinc-500 text-xs">
-    <p>Demo Layout Only • Not affiliated with Pornhub</p>
-    <p class="mt-2">Public test videos used for playback demonstration</p>
+    <p>Demo Only • Safe public test videos • Everything is fully interactive</p>
   </footer>
 
   <script>
-    // Sample videos (safe for demo)
-    const videos = [
-      {
-        title: "Hot Summer Vibes",
-        duration: "12:45",
-        views: "2.3M",
-        img: "https://picsum.photos/id/1015/320/180",
-        verified: true,
-        desc: "Demo video • Public test content"
-      },
-      {
-        title: "Intense Workout Session",
-        duration: "8:22",
-        views: "1.8M",
-        img: "https://picsum.photos/id/201/320/180",
-        verified: false,
-        desc: "Demo video • Public test content"
-      },
-      {
-        title: "Late Night Tease",
-        duration: "15:10",
-        views: "4.1M",
-        img: "https://picsum.photos/id/237/320/180",
-        verified: true,
-        desc: "Demo video • Public test content"
-      },
-      {
-        title: "Passionate Encounter",
-        duration: "10:55",
-        views: "3.7M",
-        img: "https://picsum.photos/id/133/320/180",
-        verified: false,
-        desc: "Demo video • Public test content"
-      },
-      {
-        title: "Sensual Massage",
-        duration: "22:30",
-        views: "5.2M",
-        img: "https://picsum.photos/id/180/320/180",
-        verified: true,
-        desc: "Demo video • Public test content"
-      },
-      {
-        title: "Wild Weekend",
-        duration: "7:48",
-        views: "1.1M",
-        img: "https://picsum.photos/id/251/320/180",
-        verified: false,
-        desc: "Demo video • Public test content"
-      }
+    // Real different test videos from Google
+    const videoSources = [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
     ];
 
-    const testVideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+    const videos = [
+      { id: 0, title: "Hot Summer Vibes", duration: "12:45", views: "2.3M", img: "https://picsum.photos/id/1015/320/180", verified: true, desc: "Steamy summer fun", category: "trending" },
+      { id: 1, title: "Intense Workout", duration: "8:22", views: "1.8M", img: "https://picsum.photos/id/201/320/180", verified: false, desc: "Sweaty and passionate", category: "mostviewed" },
+      { id: 2, title: "Late Night Tease", duration: "15:10", views: "4.1M", img: "https://picsum.photos/id/237/320/180", verified: true, desc: "Slow and sensual", category: "new" },
+      { id: 3, title: "Passionate Encounter", duration: "10:55", views: "3.7M", img: "https://picsum.photos/id/133/320/180", verified: false, desc: "Raw chemistry", category: "trending" },
+      { id: 4, title: "Sensual Massage", duration: "22:30", views: "5.2M", img: "https://picsum.photos/id/180/320/180", verified: true, desc: "Relaxing turns wild", category: "mostviewed" },
+      { id: 5, title: "Wild Weekend", duration: "7:48", views: "1.1M", img: "https://picsum.photos/id/251/320/180", verified: false, desc: "No limits", category: "new" },
+      { id: 6, title: "VR Experience", duration: "18:20", views: "980K", img: "https://picsum.photos/id/870/320/180", verified: true, desc: "Immersive pleasure", category: "vr" }
+    ];
 
-    function createVideoCard(video, index) {
+    let currentFilter = 'all';
+    let displayedVideos = [...videos];
+
+    function createVideoCard(video) {
       return `
-        <div onclick="playVideo(${index})" class="video-card cursor-pointer group">
-          <div class="thumbnail-container rounded-lg overflow-hidden bg-black">
-            <img src="${video.img}" alt="${video.title}" class="w-full aspect-video object-cover group-hover:scale-105 transition-transform">
+        <div onclick="playVideo(${video.id})" class="video-card cursor-pointer group">
+          <div class="thumbnail-container bg-black">
+            <img src="${video.img}" alt="${video.title}" class="w-full aspect-video object-cover">
             <div class="duration">${video.duration}</div>
             ${video.verified ? `<div class="verified">✓</div>` : ''}
           </div>
-          <div class="mt-3 px-1">
-            <h3 class="font-medium text-sm leading-tight line-clamp-2 group-hover:text-red-500">${video.title}</h3>
-            <div class="text-xs text-zinc-400 mt-1">${video.views} views</div>
+          <div class="mt-4 px-1">
+            <h3 class="font-medium text-base leading-tight line-clamp-2 group-hover:text-red-500">${video.title}</h3>
+            <div class="text-xs text-zinc-400 mt-2">${video.views} views • Today</div>
           </div>
         </div>
       `;
     }
 
-    document.getElementById('video-grid').innerHTML = videos.map((v, i) => createVideoCard(v, i)).join('');
+    function renderVideos(containerId, videoList) {
+      document.getElementById(containerId).innerHTML = videoList.map(v => createVideoCard(v)).join('');
+    }
 
-    function playVideo(index) {
-      const videoData = videos[index];
+    function filterVideos(filter) {
+      currentFilter = filter;
+      if (filter === 'all') {
+        displayedVideos = [...videos];
+      } else {
+        displayedVideos = videos.filter(v => v.category === filter);
+      }
+      renderVideos('video-grid', displayedVideos);
+      document.getElementById('sectionTitle').textContent = 
+        filter === 'all' ? 'Trending Right Now 🔥' : 
+        filter === 'trending' ? 'Trending Right Now 🔥' :
+        filter === 'mostviewed' ? 'Most Viewed Videos' :
+        filter === 'new' ? 'New Videos' :
+        filter === 'vr' ? 'VR Porn' : 'Live Cams';
+    }
+
+    function playVideo(id) {
+      const videoData = videos.find(v => v.id === id);
+      if (!videoData) return;
+
       document.getElementById('modalTitle').textContent = videoData.title;
       document.getElementById('modalDesc').innerHTML = `
+        <div class="flex gap-4 text-sm text-zinc-400 mb-6">
+          <span>${videoData.views} views</span>
+          <span>•</span>
+          <span>${videoData.duration}</span>
+        </div>
         <p>${videoData.desc}</p>
-        <p class="mt-2 text-xs">${videoData.views} views • ${videoData.duration}</p>
       `;
 
       const player = document.getElementById('player');
       const loading = document.getElementById('loading');
       
-      player.src = testVideoUrl;
+      // Cycle through different videos based on index
+      const videoIndex = id % videoSources.length;
+      player.src = videoSources[videoIndex];
+      
       loading.classList.remove('hidden');
 
       player.onloadeddata = () => loading.classList.add('hidden');
       player.onerror = () => {
-        loading.innerHTML = `<p class="text-red-500">Video failed to load.<br>Try again or check your connection.</p>`;
+        loading.innerHTML = `<p class="text-red-500">Failed to load. Try another video.</p>`;
       };
 
-      document.getElementById('videoModal').classList.remove('hidden');
-      document.getElementById('videoModal').classList.add('flex');
+      const modal = document.getElementById('videoModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
     function closeModal() {
       const player = document.getElementById('player');
       player.pause();
       player.src = '';
-      document.getElementById('videoModal').classList.add('hidden');
-      document.getElementById('videoModal').classList.remove('flex');
+      const modal = document.getElementById('videoModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
 
-    // Close modal on outside click
-    document.getElementById('videoModal').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('videoModal')) closeModal();
+    function showMore() {
+      alert("In a real site this would load more videos.\nFor this demo we've shown all available content.");
+    }
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase().trim();
+      if (!term) {
+        renderVideos('video-grid', displayedVideos);
+        return;
+      }
+      const filtered = displayedVideos.filter(v => 
+        v.title.toLowerCase().includes(term) || 
+        v.desc.toLowerCase().includes(term)
+      );
+      renderVideos('video-grid', filtered);
     });
+
+    // Nav clicks
+    document.querySelectorAll('#secondaryNav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('#secondaryNav a').forEach(l => l.classList.remove('active-nav'));
+        link.classList.add('active-nav');
+        filterVideos(link.getAttribute('data-filter'));
+      });
+    });
+
+    // Keyboard escape
+    document.addEventListener('keydown', e => {
+      if (e.key === "Escape") closeModal();
+    });
+
+    // Initial render
+    renderVideos('video-grid', videos);
+    renderVideos('recommended-grid', videos.slice(2).concat(videos.slice(0, 3))); // slight shuffle for recommended
+
+    // Tailwind script already included
   </script>
 </body>
 </html>
